@@ -1,5 +1,7 @@
 <?php
 
+// 冬菜助手-方方方  微信: ifunch
+
 date_default_timezone_set('PRC');
 ini_set('default_charset', 'UTF-8');
 header('Content-type: text/html; charset=UTF-8');
