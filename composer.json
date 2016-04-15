@@ -1,0 +1,13 @@
+{
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://packagist.phpcomposer.com"
+        }
+    },
+    "require": {
+        "intervention/image": "^2.3",
+        "endroid/qrcode": "^1.6",
+        "duncan3dc/blade": "^3.0"
+    }
+}

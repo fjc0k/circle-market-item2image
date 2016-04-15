@@ -1,7 +1,5 @@
 <?php
 
-// 冬菜助手-方方方 微信: ifunch
-
 date_default_timezone_set('PRC');
 ini_set('default_charset', 'UTF-8');
 header('Content-type: text/html; charset=UTF-8');
@@ -53,11 +51,11 @@ function ajax($data, $jsonp = false){
 
 // 一个小小的控制器入口
 $request_method = $_SERVER['REQUEST_METHOD'] === 'GET' ? 'get' : 'post';
-$controller = (isset($_GET['c']) && $_GET['c'] != '') ? $_GET['c'] : 'index';
+$controller = (isset($_GET['c']) && $_GET['c'] != '') ? $_GET['c'] : 'home';
 $method = (isset($_GET['m']) && $_GET['m'] != '') ? $_GET['m'] : 'index';
 if(preg_match('!^[-_a-zA-Z0-9]+$!', $controller.$method) !== 1) exit;
 $controller_path = './controller/'.$controller.'.controller.php';
-if(!file_exists($controller_path)) $controller = 'index';
+if(!file_exists($controller_path)) $controller = 'home';
 $controller_full = 'Controller\\'.$controller;
 $obj = new $controller_full();
 $method_full = $request_method.$method;
