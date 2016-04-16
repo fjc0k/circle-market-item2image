@@ -7,7 +7,7 @@ PHP版的圈子集市推图制作工具, 可以将圈子集市的商品或服务
 - 以下扩展必须安装: Fileinfo、GD（或Imagick）、mbstring
 
 ## 使用之前
-1. 配置session, 编辑config.php, 如:
+- 配置session, 编辑config.php, 如:
 ```php
 <?php
 return [
@@ -15,6 +15,6 @@ return [
     // 该session为随意填写, 请不要直接复制粘贴
 ];
 ```
-2. 更改cache目录权限为777.
+- 更改cache目录权限为777.
 
 任何建议, 加微信: ifunch
