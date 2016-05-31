@@ -7,12 +7,12 @@ PHP版的圈子集市推图制作工具, 可以将圈子集市的商品或服务
 - 以下扩展必须安装: Fileinfo、GD（或Imagick）、mbstring
 
 ## 使用之前
-- 配置session, 编辑config.php, 如:
+- 配置session和圈子集市api token, 编辑config.php, 如:
 ```php
 <?php
 return [
-    'session' => '.eJw3324g213G7zNpFYWZa4DKk_N321Ji3322L4v70MRSK3N-3NNG020KAO45664hHERC2oRB48uqwITDdCqbinudi1bXlc2N7ulPWSV0v134ejD83442.CeVn3w7lv44Ubi0vmpYofURyTc-_Y'
-    // 该session为随意填写, 请不要直接复制粘贴
+    'session' => 'xxxxx', //该session为随意填写, 请不要直接复制粘贴
+    'token' => 'xxxxxx', //你的api token
 ];
 ```
 - 更改cache目录权限为777.
