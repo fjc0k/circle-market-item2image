@@ -5,23 +5,105 @@ use Endroid\QrCode\QrCode;
 use Funch\Curl;
 
 class Home{
-    
+
+    private $config = [];
+
+    function __construct(){
+        $this->config = include('./config.php');
+    }
+
     function index(){
+        $now = time();
         // 删除超过1个小时的图片缓存
         $cache_images_path = './cache/images';
         $files = glob($cache_images_path.'/*');
         foreach ($files as $file) {
-            if(filemtime($file) < time() - 3600){
+            if(filemtime($file) < $now - 3600){
+                unlink($file);
+            }
+        }
+        // 删除超过24小时的url列表缓存
+        $cache_items_path = './cache/items';
+        $files = glob($cache_items_path.'/*');
+        foreach ($files as $file) {
+            if(filemtime($file) < $now - 3600*24){
                 unlink($file);
             }
         }
         return view('home.index');
     }
     
+    private function circleItemUrls($circle_id, $start_time, $end_time){
+        $body = Curl::request([
+            'url' => 
+                'http://api.quanzijishi.com/internal/get_circle_item_urls?circle_id='.$circle_id,
+            'headers' => 
+                'Content-Type: application/json',
+            'post' => 
+                json_encode([
+                    'password' => $this->config['token'],
+                    'start_time' => $start_time,
+                    'end_time' => $end_time
+                ])
+        ]);
+
+        $ret = json_decode($body, true);
+        if(!$ret || $ret['status_code'] != 200)
+            return [];
+        else
+            return $ret['urls'];
+
+    }
+
+    public function postCircleItemUrls(){
+        $circle_id = $_POST['circle_id'];
+        $start_time = strtotime($_POST['start_time']);
+        $end_time = strtotime($_POST['end_time']);
+        $cache_name = md5($circle_id.$start_time.$end_time);
+        $cache_file = './cache/items/'.$cache_name;
+        $fake_urls = [];
+        if(file_exists($cache_file)){
+            $urls = unserialize(file_get_contents($cache_file));
+            $count = count($urls);
+            for($i = 0; $i < $count; $i++){
+                $fake_urls[] = 'fake_'.$cache_name.'_'.$i;
+            }
+            return ajax([
+                'success' => true,
+                'urls' => $fake_urls
+            ]);
+        }
+        $urls = $this->circleItemUrls($circle_id, $start_time, $end_time);
+        if(!$urls){
+            return ajax([
+                'success' => false,
+                'message' => '该时段无商品！'
+            ]);
+        }
+        file_put_contents($cache_file, serialize($urls));
+        $count = count($urls);
+        for($i = 0; $i < $count; $i++){
+            $fake_urls[] = 'fake_'.$cache_name.'_'.$i;
+        }
+        return ajax([
+            'success' => true,
+            'urls' => $fake_urls
+        ]);
+
+    }
+
+    private function realUrl($fake_url){
+        $t = explode('_', $fake_url, 3);
+        $urls = unserialize(file_get_contents('./cache/items/'.$t[1]));
+        return $urls[$t[2]];
+    }
+
     function postIndex(){
-        $config = include('./config.php');
         $url = explode('?', trim($_POST['url']), 2)[0];
-        $headers = 'Cookie: session='.$config['session'];
+        if(substr($url, 0, 4) === 'fake'){ // fake_url转真实url
+            $url = $this->realUrl($url);
+        }
+        $headers = 'Cookie: session='.$this->config['session'];
         $body = Curl::request([
             'url' => $url,
             'headers' => $headers
@@ -45,13 +127,13 @@ class Home{
         $title = $removeEmoji($title);
         $title = mb_strlen($title, 'utf-8') <= 18 ? $title : mb_substr($title, 0, 18, 'utf-8').'...';
 
-        $des = isset($_POST['des']) && $_POST['des'] ? $_POST['des'] : trim($substr($body, '<pre id="description">', '</pre>'));
+        $des = isset($_POST['des']) && $_POST['des'] ? $_POST['des'] : (strpos($body, '<pre id="description">') !== false ? trim($substr($body, '<pre id="description">', '</pre>')) : '<(￣︶￣)> 假装有介绍');
         $des = $removeEmoji($des);
         $des = mb_strlen($des, 'utf-8') <= 26 ? $des : mb_substr($des, 0, 26, 'utf-8').'...';
         
         $first_picture_url = isset($_POST['theme_url']) && $_POST['theme_url'] ? $_POST['theme_url'] : $substr($body, '<img class="photo" src="', '"');
         
-        $price = isset($_POST['price']) && $_POST['price'] ? '￥'.$_POST['price'] : $substr($body, '<span class="price">', '</span>');
+        $price = isset($_POST['price']) && $_POST['price'] ? '￥'.$_POST['price'] : $substr($body, 'price">', '</span>'); // 已适配特殊价格
         
         $type = $type_title[0] === '我有' ? 'product' : 'service';
         
