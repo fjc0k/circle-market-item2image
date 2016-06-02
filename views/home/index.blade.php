@@ -230,11 +230,11 @@ http://wx.quanzijishi.com/item/522
         }
         $('#item-count').html(r.urls.length);
         $('#bytime-confirm').modal({
-          relatedTarget: '#bytime-confirm',
+          relatedTarget: r.urls, // 数据钩子 以更新modal中的动态数据
           onConfirm: function() {
             var btn = $(_this).find('button:first');
             btn.html('<i class="am-icon-spinner am-icon-pulse"></i> 制作中').addClass('am-disabled');
-            var urls = r.urls;
+            var urls = this.relatedTarget;
             var len = urls.length;
             var i = 0;
             urls.forEach(function(url){
