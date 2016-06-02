@@ -13,8 +13,9 @@ PHP版的圈子集市推图制作工具, 可以将圈子集市的商品或服务
 return [
     'session' => 'xxxxx', //该session为随意填写, 请不要直接复制粘贴
     'token' => 'xxxxxx', //你的api token
+    'item_urls_limit' => 40, // 按时间制作推图时的URL数最高限制
 ];
 ```
-- 更改cache目录权限为777.
+- 更改cache下的所有子目录的权限为777.
 
 任何建议, 加微信: ifunch
