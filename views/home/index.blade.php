@@ -144,6 +144,16 @@ http://wx.quanzijishi.com/item/522
       <textarea id="editor" placeholder="图片复制区"></textarea>
   </div>
 </div>
+<div class="am-modal am-modal-confirm" tabindex="-1" id="error-tip">
+  <div class="am-modal-dialog">
+    <div class="am-modal-hd">提示</div>
+    <div class="am-modal-bd" id="error-message">
+    </div>
+    <div class="am-modal-footer">
+      <span class="am-modal-btn" data-am-modal-cancel>我知道了</span>
+    </div>
+  </div>
+</div>
 <div class="am-modal am-modal-confirm" tabindex="-1" id="bytime-confirm">
   <div class="am-modal-dialog">
     <div class="am-modal-hd">按时间批量制作</div>
@@ -165,7 +175,7 @@ http://wx.quanzijishi.com/item/522
 <script src="./assets/simditor-2.3.6/scripts/simditor.min.js"></script>
 <script>
     $('.datetimepicker').datetimepicker({
-      format: 'yyyy-mm-dd hh:ii:ss',
+      format: 'yyyy-mm-dd hh:ii',
       language:  'zh-CN'
     });
     var editor = new Simditor({
@@ -214,7 +224,8 @@ http://wx.quanzijishi.com/item/522
       $.post('?m=CircleItemUrls', $(_this).serialize(), function(r){
         r = JSON.parse(r);
         if(!r.success){
-          alert(r.message);
+          $('#error-message').html(r.message);
+          $('#error-tip').modal();
           return;
         }
         $('#item-count').html(r.urls.length);

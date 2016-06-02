@@ -80,8 +80,14 @@ class Home{
                 'message' => '该时段无商品！'
             ]);
         }
-        file_put_contents($cache_file, serialize($urls));
         $count = count($urls);
+        if($count > $this->config['item_urls_limit']){
+            return ajax([
+                'success' => false,
+                'message' => '该时段商品/服务数（共'.$count.'个）过多（限制：'.$this->config['item_urls_limit'].'个），请分开制作！'
+            ]);
+        }
+        file_put_contents($cache_file, serialize($urls));
         for($i = 0; $i < $count; $i++){
             $fake_urls[] = 'fake_'.$cache_name.'_'.$i;
         }
