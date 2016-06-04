@@ -109,7 +109,7 @@ class Home{
         if(substr($url, 0, 4) === 'fake'){ // fake_url转真实url
             $url = $this->realUrl($url);
         }
-        $headers = 'Cookie: session='.$this->config['session'];
+        $headers = 'Cookie: user_id='.$this->config['user_id'].'; session='.$this->config['session'];
         $body = Curl::request([
             'url' => $url,
             'headers' => $headers
@@ -138,7 +138,7 @@ class Home{
         $des = mb_strlen($des, 'utf-8') <= 26 ? $des : mb_substr($des, 0, 26, 'utf-8').'...';
         
         $first_picture_url = isset($_POST['theme_url']) && $_POST['theme_url'] ? $_POST['theme_url'] : $substr($body, '<img class="photo" src="', '"');
-        
+
         $price = isset($_POST['price']) && $_POST['price'] ? '￥'.$_POST['price'] : $substr($body, 'price">', '</span>'); // 已适配特殊价格
         
         $type = $type_title[0] === '我有' ? 'product' : 'service';
