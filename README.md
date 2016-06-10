@@ -11,6 +11,11 @@ PHP版的圈子集市推图制作工具, 可以将圈子集市的商品或服务
 ```php
 <?php
 return [
+<<<<<<< HEAD
+=======
+	'user_id' => '******', // cookies中的user_id
+    'session' => 'xxxxx', //该session为随意填写, 请不要直接复制粘贴
+>>>>>>> origin/master
     'token' => 'xxxxxx', //你的api token
     'item_urls_limit' => 40, // 按时间制作推图时的URL数最高限制
     'cookie_jar' => __DIR__.'/cache/cookies.txt', // cookies交换文件
