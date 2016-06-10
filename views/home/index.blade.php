@@ -166,6 +166,8 @@ http://wx.quanzijishi.com/item/522
     </div>
   </div>
 </div>
+<!-- 更新cookies -->
+<img src="?m=updateCookies" style="display: none;width: 0;height: 0;margin-left: -1000px;">
 <script src="http://lib.sinaapp.com/js/jquery/2.0.3/jquery-2.0.3.min.js"></script>
 <script src="http://cdn.amazeui.org/amazeui/2.6.1/js/amazeui.min.js"></script>
 <script src="http://public.dufe.cc/AmazeUI/datetimepicker/js/amazeui.datetimepicker.min.js"></script>

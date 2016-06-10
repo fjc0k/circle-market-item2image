@@ -30,8 +30,25 @@ class Home{
                 unlink($file);
             }
         }
+
         return view('home.index');
     }
+
+
+    function updateCookies(){
+        // 通过圈子集市电脑端的预览功能，更新cookies
+        Curl::request([
+            'url' => 'http://wx.quanzijishi.com/circle/nf9b3dv0y4k?preview=1',
+            'cookie_jar' => $this->config['cookie_jar']
+        ]);
+        return true;
+    }
+
+
+
+
+
+
     
     private function circleItemUrls($circle_id, $start_time, $end_time){
         $body = Curl::request([
@@ -109,10 +126,9 @@ class Home{
         if(substr($url, 0, 4) === 'fake'){ // fake_url转真实url
             $url = $this->realUrl($url);
         }
-        $headers = 'Cookie: user_id='.$this->config['user_id'].'; session='.$this->config['session'];
         $body = Curl::request([
             'url' => $url,
-            'headers' => $headers
+            'cookie_jar' => $this->config['cookie_jar']
         ]);
         
         // 处理函数

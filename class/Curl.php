@@ -18,8 +18,21 @@ class Curl{
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HEADER, $return_raw);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
+
+        if(!isset($a['follow_location']) || $a['follow_location'] !== false){
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
+        }
+
+        if(isset($a['cookie_jar'])){
+            if(!file_exists($a['cookie_jar'])){
+                $fp = fopen($a['cookie_jar'], 'w');
+                fclose($fp);
+            }
+            curl_setopt($ch, CURLOPT_COOKIEFILE, $a['cookie_jar']);
+            curl_setopt($ch, CURLOPT_COOKIEJAR, $a['cookie_jar']);
+        }
+
         curl_setopt($ch, CURLOPT_TIMEOUT, 15);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         
@@ -30,6 +43,8 @@ class Curl{
         }
         
         $response = curl_exec($ch);
+
+        curl_close($ch);
         
         return $response;
     }
